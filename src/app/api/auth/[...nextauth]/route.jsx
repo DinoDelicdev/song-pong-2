@@ -1,6 +1,8 @@
 import NextAuth from "next-auth/next";
 import SpotifyProvider from "next-auth/providers/spotify";
 
+console.log("SECRET", process.env.SPOTIFY_CLIENT_ID);
+
 const OPTIONS = {
   providers: [
     SpotifyProvider({
