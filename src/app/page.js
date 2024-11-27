@@ -17,7 +17,7 @@ export default function HomePage() {
         {user && user.images.length ? <AvatarImage src={user.images[0].url} alt="@shadcn" /> : ""}
         {user && user.images.length ? <AvatarFallback>{user.username[0]}</AvatarFallback> : ""}
       </Avatar>
-      <h1 className="text-[2rem]">{user.username}</h1>
+      <h1 className="text-[2rem]">{user && user.username ? user.username : ""}</h1>
 
       <h1>SONG PONG</h1>
       <Button
