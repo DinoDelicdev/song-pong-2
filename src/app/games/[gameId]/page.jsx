@@ -4,7 +4,7 @@ import { gameByIdState, userSpotifyAccountState } from "@/state/state";
 import { useSession } from "next-auth/react";
 import { getSongsFromSpotifyPlaylist } from "@/utils/spotify";
 
-const page = ({ params }) => {
+const Game = ({ params }) => {
   const { data: session } = useSession();
   const game = useRecoilValue(gameByIdState(Number(params.gameId)));
   const user = useRecoilValue(userSpotifyAccountState);
@@ -14,4 +14,4 @@ const page = ({ params }) => {
   return <div>Hellloooooo</div>;
 };
 
-export default page;
+export default Game;

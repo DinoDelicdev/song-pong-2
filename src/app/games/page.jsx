@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { gamesState, userSpotifyAccountState } from "@/state/state";
 
-const page = () => {
+const Games = () => {
   const [games, setGames] = useRecoilState(gamesState);
   const user = useRecoilValue(userSpotifyAccountState);
   const [loading, setLoading] = useState(true);
@@ -65,4 +65,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Games;

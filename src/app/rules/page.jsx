@@ -10,7 +10,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 
-const page = () => {
+const Rules = () => {
   const [rules, setRules] = useRecoilState(rulesState);
   const router = useRouter();
 
@@ -150,4 +150,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Rules;
