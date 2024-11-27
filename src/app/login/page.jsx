@@ -58,7 +58,7 @@ const Login = () => {
       setIsLoading(true);
       handleRegistration();
     }
-  }, [session, router]);
+  }, [session, router, setUserPlaylists, setUserSpotifyAccount]);
 
   const handleSignIn = async () => {
     setIsLoading(true);
