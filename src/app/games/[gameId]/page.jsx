@@ -1,4 +1,5 @@
 "use client";
+import { useEffect } from "react";
 import { useRecoilValue } from "recoil";
 import { gameByIdState, userSpotifyAccountState } from "@/state/state";
 import { useSession } from "next-auth/react";
@@ -8,9 +9,10 @@ const Game = ({ params }) => {
   const { data: session } = useSession();
   const game = useRecoilValue(gameByIdState(Number(params.gameId)));
   const user = useRecoilValue(userSpotifyAccountState);
+
   console.log(session);
-  console.log(game);
-  console.log(user);
+  console.log(game.rules);
+  console.log(user.id);
   return <div>Hellloooooo</div>;
 };
 

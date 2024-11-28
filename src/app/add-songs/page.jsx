@@ -5,6 +5,7 @@ import { rulesState, selectedSongsState } from "@/state/state";
 import SelectedSong from "@/components/shared/SelectedSong";
 import SearchSongDialog from "@/components/shared/SearchSongDialog";
 import { Button } from "@/components/ui/button";
+import { checkIfSongsComplyWithRules } from "@/utils/spotify";
 
 const AddSongs = () => {
   const rules = useRecoilValue(rulesState);
@@ -20,8 +21,19 @@ const AddSongs = () => {
       })}
       <Button
         className="mt-20"
-        onClick={() => {
-          console.log(rules);
+        onClick={async () => {
+          let songsWithStreamNumbersResponse = await fetch("api/spotify/streams/get", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(selectedSongs),
+          });
+          let songsWithStreamNumbers = await songsWithStreamNumbersResponse.json();
+
+          console.log("THIS IS IT", songsWithStreamNumbers);
+          let message = checkIfSongsComplyWithRules(songsWithStreamNumbers, [], rules);
+          console.log(message);
         }}
       >
         SEND GAME REQUEST

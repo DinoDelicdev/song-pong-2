@@ -3,6 +3,7 @@ import GameCard from "@/components/shared/GameCard";
 import React, { useEffect, useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { gamesState, userSpotifyAccountState } from "@/state/state";
+import { Swords } from "lucide-react";
 
 const Games = () => {
   const [games, setGames] = useRecoilState(gamesState);
@@ -57,9 +58,9 @@ const Games = () => {
   }
 
   return (
-    <div className="flex flex-col items-center h-[calc(100vh-54px)]">
+    <div className="flex flex-col items-center h-[calc(100vh-54px)] px-3">
       {games.map((game) => (
-        <GameCard key={game.id} gameId={game.id} />
+        <GameCard key={game.id} game={game} />
       ))}
     </div>
   );
