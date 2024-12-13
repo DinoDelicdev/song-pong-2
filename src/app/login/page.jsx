@@ -47,7 +47,20 @@ const Login = () => {
           console.log(playlists);
           setUserPlaylists(playlists);
           setIsLoading(false);
-          router.push("/");
+          console.log("LOCAL", localStorage.getItem("sharedLinkUrl"));
+          if (localStorage.getItem("sharedLinkUrl")) {
+            console.log("USAO");
+            let url = localStorage.getItem("sharedLinkUrl");
+            console.log("Attempting to navigate to URL:", url);
+            try {
+              router.push(url);
+            } catch (error) {
+              console.error("Navigation error:", error);
+            }
+            localStorage.clear();
+          } else {
+            router.push("/");
+          }
         } catch (error) {
           console.error("There was a problem with the fetch operation:", error);
         } finally {

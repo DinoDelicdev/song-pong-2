@@ -59,6 +59,7 @@ export const formatSongData = (song) => {
       return {
         id: artist.id,
         name: artist.name,
+        link: artist.external_urls.spotify,
       };
     }),
     album: song.album.name,
@@ -125,19 +126,48 @@ export const checkIfSongsComplyWithRules = (songs, existingSongs = [], rules) =>
 
   // POPULARITY RULE
 
-  let songsThatDontComplyWithPopularity = checkIfSongsComplyWithPopularityRules(songs, rules);
-  if (songsThatDontComplyWithPopularity.length) {
+  let songsThatDontComplyWithStreamingRules = checkIfSongsComplyWithPopularityRules(songs, rules);
+  if (songsThatDontComplyWithStreamingRules.length) {
     return {
       complies: false,
-      songsWithPopularity: songsThatDontComplyWithPopularity,
-      reason: "popularity",
+      songsThatDontComplyWithStreaming: songsThatDontComplyWithStreamingRules,
+      reason: "streams",
       message: `Following Songs don't have stream number ${rules.streamsMore ? "more" : "less"} then ${rules.streamsLimit}: 
       ${songsThatDontComplyWithPopularity.reduce((acc, song, index) => {
         if (index === 0) {
           return acc + song.name + " " + "(" + song.streams + ")";
         }
-        return acc + " , " + song.name;
+        return acc + " , " + song.name + " " + "(" + song.streams + ")";
       }, "")}`,
+    };
+  }
+
+  // MONTHLY LISTENERS RULE
+
+  let songsThatDontComplyWithMonthlyListenersRule = checkIfSongsComplyWithMonthlyListenersRule(songs, rules);
+  if (songsThatDontComplyWithMonthlyListenersRule.length) {
+    const nonCompliantArtists = songsThatDontComplyWithMonthlyListenersRule.map((song) => {
+      return {
+        songName: song.name,
+        artists: song.artist
+          .filter((artist) => !checkMonthlyListenersRuleForSingleArtist(artist, rules))
+          .map((artist) => ({
+            name: artist.name,
+            numberOfMonthlyListeners: artist.numberOfMonthlyListeners,
+          })),
+      };
+    });
+
+    console.log(nonCompliantArtists);
+    return {
+      complies: false,
+      songsThatDontComplyWithMonthlyListeners: songsThatDontComplyWithMonthlyListenersRule,
+      message: `Following Songs have Artist that don't have number of monthly listeners ${rules.monthleyListenersMore ? "more" : "less"} than ${rules.monthleyListenersLimit}: 
+      ${nonCompliantArtists
+        .map((song) => {
+          return `${song.songName}: ${song.artists.map((artist) => `${artist.name} (${artist.numberOfMonthlyListeners})`).join(", ")}`;
+        })
+        .join("; ")}`,
     };
   }
 
@@ -146,6 +176,7 @@ export const checkIfSongsComplyWithRules = (songs, existingSongs = [], rules) =>
     message: "Everithing OK",
   };
 };
+// HELPER FUNCTIONS
 
 const findDuplicates = (array) => {
   const seen = new Set();
@@ -186,7 +217,7 @@ const checkIfSongsHaveDuplicateArtist = (songs, duplicates) => {
 };
 
 export const checkPopularityRuleForSingleSong = (song, rules) => {
-  let popularityCheckPassed = rules.streamsMore ? song.streams >= rules.streamsLimit : song.streams <= rules.streamsLimit;
+  let popularityCheckPassed = rules.streamsMore ? song.streams >= rules.streamsLimit : song.streams < rules.streamsLimit;
 
   return popularityCheckPassed;
 };
@@ -203,4 +234,46 @@ const checkIfSongsComplyWithPopularityRules = (songs, rules) => {
     .filter((song) => song !== null);
 
   return songsThatDontComplyWithPopularityRules;
+};
+
+const checkMonthlyListenersRuleForSingleArtist = (artist, rules) => {
+  let monthlyLimitRulePassed = rules.monthleyListenersMore ? artist.numberOfMonthlyListeners >= rules.monthleyListenersLimit : artist.numberOfMonthlyListeners < rules.monthleyListenersLimit;
+  return monthlyLimitRulePassed;
+};
+
+const checkIfSongsComplyWithMonthlyListenersRule = (songs, rules) => {
+  let songsThatDontComplyWithMonthlyListenersRule = songs.filter((song) => {
+    return song.artist.some((artist) => {
+      return !checkMonthlyListenersRuleForSingleArtist(artist, rules);
+    });
+  });
+
+  return songsThatDontComplyWithMonthlyListenersRule;
+};
+
+export const createPlaylist = async (userId, userName, secondUserName, session, name) => {
+  const url = `https://api.spotify.com/v1/users/${userId}/playlists`;
+
+  const response = await fetch(url, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${session.token.access_token}`,
+    },
+    body: JSON.stringify({ name: `Song Pong Playlist (${name}) - ${userName} vs ${secondUserName} - ${new Date().toString()}`, description: "Song Pong playlist", public: false, collaborative: true }),
+  });
+
+  const data = await response.json();
+  return data;
+};
+
+export const addTracksToPlaylist = async (session, playlistId, tracks) => {
+  const url = `https://api.spotify.com/v1/playlists/${playlistId}/tracks`;
+
+  const response = await fetch(url, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${session.token.access_token}`,
+    },
+    body: JSON.stringify({ uris: tracks.map((track) => track.uri) }),
+  });
 };

@@ -1,17 +1,9 @@
 "use client";
 import React from "react";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { useRecoilState } from "recoil";
-import { selectedSongsState } from "@/state/state";
-import { Button } from "../ui/button";
 import Image from "next/image";
 
-const SelectedSong = ({ song, handleCompliesSetting }) => {
-  const [selectedSongs, setSelectedSongs] = useRecoilState(selectedSongsState);
-  const handleSongRemoval = () => {
-    console.log(song.id);
-    setSelectedSongs(selectedSongs.filter((selectedSong) => selectedSong.id !== song.id));
-  };
+const ExistingSong = ({ song }) => {
   return (
     <Card className="w-[90%] mt-4">
       <CardHeader>
@@ -38,18 +30,8 @@ const SelectedSong = ({ song, handleCompliesSetting }) => {
           }, "")}
         </CardDescription>
       </CardHeader>
-      <CardFooter>
-        <Button
-          onClick={() => {
-            handleSongRemoval();
-            handleCompliesSetting();
-          }}
-        >
-          REMOVE
-        </Button>
-      </CardFooter>
     </Card>
   );
 };
 
-export default SelectedSong;
+export default ExistingSong;

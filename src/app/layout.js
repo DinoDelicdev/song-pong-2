@@ -4,6 +4,7 @@ import AuthProvider from "@/providers/AuthProvider";
 import RecoilContextProvider from "@/providers/RecoilContextProvider";
 import { ThemeProvider } from "@/providers/ThemeProvider";
 import { ModeToggle } from "@/components/shared/ModeToggle";
+import { Toaster } from "@/components/ui/toaster";
 import Header from "@/components/shared/Header";
 
 const geistSans = localFont({
@@ -31,6 +32,7 @@ export default function RootLayout({ children }) {
             <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
               <Header />
               {children}
+              <Toaster />
             </ThemeProvider>
           </RecoilContextProvider>
         </AuthProvider>

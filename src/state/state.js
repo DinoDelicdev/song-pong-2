@@ -40,7 +40,7 @@ export const rulesState = atom({
   default: {
     playlistName: "",
     songsPerTurn: 2,
-    streamsMore: true,
+    streamsMore: false,
     streamsLimit: 1,
     repeatedArtist: false,
     monthleyListenersMore: false,

@@ -3,7 +3,6 @@ import GameCard from "@/components/shared/GameCard";
 import React, { useEffect, useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { gamesState, userSpotifyAccountState } from "@/state/state";
-import { Swords } from "lucide-react";
 
 const Games = () => {
   const [games, setGames] = useRecoilState(gamesState);

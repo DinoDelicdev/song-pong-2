@@ -1,8 +1,8 @@
 "use client";
 import React from "react";
 import { useRouter } from "next/navigation";
-import { useRecoilState } from "recoil";
-import { rulesState } from "@/state/state";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { rulesState, userSpotifyAccountState } from "@/state/state";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -11,6 +11,7 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 
 const Rules = () => {
+  const user = useRecoilValue(userSpotifyAccountState);
   const [rules, setRules] = useRecoilState(rulesState);
   const router = useRouter();
 
@@ -130,8 +131,9 @@ const Rules = () => {
       <Button
         onClick={() => {
           const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
-          const queryString = new URLSearchParams(rules).toString();
-          const shareableLink = `${baseUrl}?${queryString}`;
+          const queryString = new URLSearchParams({ ...rules, playerEmail: user.email, userName: user.username }).toString();
+
+          const shareableLink = `${baseUrl}/shared?${queryString}`;
           console.log(shareableLink);
           navigator.clipboard
             .writeText(shareableLink)

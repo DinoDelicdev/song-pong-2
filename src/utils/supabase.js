@@ -47,10 +47,10 @@ export const getAllUsers = async (email) => {
   return data;
 };
 
-export const createNewGame = async (requstingUserEmail, recievingUserEmail, playlistId, rules) => {
+export const createNewGame = async (requstingUserEmail, recievingUserEmail, playlistId, rules, senderName, recieverName, playlistUrl) => {
   const { data, error } = await supabase
     .from("games_test")
-    .insert({ sender_email: requstingUserEmail, reciever_email: recievingUserEmail, spotify_playlist_id: playlistId, rules: rules, players: [recievingUserEmail, requstingUserEmail] })
+    .insert({ sender_email: requstingUserEmail, reciever_email: recievingUserEmail, spotify_playlist_id: playlistId, rules: rules, players: [recievingUserEmail, requstingUserEmail], sender_name: senderName, reciever_name: recieverName, spotify_playlist_url: playlistUrl })
     .select();
   if (error) {
     console.error("Error creating new game:", error);

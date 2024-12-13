@@ -5,6 +5,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "../ui/button";
 import { Swords } from "lucide-react";
+import Image from "next/image";
 
 const GameCard = ({ game }) => {
   const router = useRouter();
@@ -13,12 +14,21 @@ const GameCard = ({ game }) => {
     <Card className="w-full mt-2">
       <CardHeader className="flex flex-col items-center">
         <CardTitle
-          className="cursor-pointer"
+          className="cursor-pointer flex gap-4 items-center"
           onClick={() => {
             console.log();
           }}
         >
           {rules.playlistName}
+          <Image
+            src="/spotify.png"
+            width={25}
+            height={25}
+            alt="Picture of the author"
+            onClick={() => {
+              window.open(game.spotify_playlist_url);
+            }}
+          />
         </CardTitle>
       </CardHeader>
       <CardContent className="flex justify-center items-center gap-3">

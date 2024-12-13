@@ -41,6 +41,7 @@ const SearchSongDialog = () => {
 
   const handleSearch = async (query) => {
     let data = await searchSpotifyTracks(session, query);
+    console.log(data);
     let formatedSongsData = data.tracks.items.map((song) => {
       return formatSongData(song);
     });
@@ -100,13 +101,13 @@ const SearchSongDialog = () => {
             <DialogHeader className="mb-0 h-full w-full">
               <DialogTitle>Add Song From Playlist</DialogTitle>
               {/* <DialogDescription></DialogDescription> */}
-              <div className="w-full flex flex-wrap gap-2">
+              <div className="w-full flex flex-nowrap gap-2 min-h-10 overflow-x-auto overflow-hidden items-center scrollbar-hide">
                 {userPlaylists.length
                   ? userPlaylists.map((playlist) => {
                       return (
                         <Card
                           key={playlist.id}
-                          className="bg-black text-white p-2 cursor-pointer"
+                          className="bg-black text-white p-2 cursor-pointer h-full whitespace-nowrap"
                           onClick={async () => {
                             console.log(playlist.id);
                             await handleFetchingSongsFromPlaylists(playlist.id);
